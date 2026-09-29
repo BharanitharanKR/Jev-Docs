@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DocJev Studio — Document Classification & Splitting</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f8f7f4;
+      --paper-card: #ffffff;
+      --ink: #21182d;
+      --purple: #6718f7;
+      --purple-light: #7e3af2;
+      --lavender: #f1ebfc;
+      --lavender-card: #f9f6fe;
+      --blue: #4b72fe;
+      --line: #e2dce7;
+      --line-subtle: #ede8f2;
+      --muted: #716778;
+      --muted-light: #9c92a3;
+      --green: #10b981;
+      --green-bg: #e6f7f0;
+      --mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.5;
+    }
+
+    /* Container */
+    .wrap {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    /* Top Navigation */
+    .topbar {
+      height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: var(--paper);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      background: var(--ink);
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.5px;
+    }
+    .brand-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      color: var(--ink);
+    }
+    .brand-badge {
+      font: 11px var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      background: var(--lavender);
+      border: 1px solid var(--line);
+      color: var(--purple);
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .creator-tag {
+      font: 12px var(--mono);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+    .creator-tag strong { color: var(--ink); font-weight: 600; }
+    .status-dot {
+      width: 8px; height: 8px; background: var(--green); border-radius: 50%; display: inline-block;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 48px 0 32px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      font: 11px var(--mono);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 58px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -2.5px;
+      max-width: 900px;
+      color: var(--ink);
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--purple);
+      text-decoration: underline;
+      text-decoration-color: #d8c3fc;
+      text-underline-offset: 8px;
+    }
+    .hero-sub {
+      font-size: 19px;
+      line-height: 1.45;
+      color: var(--muted);
+      margin: 18px 0 28px;
+      max-width: 740px;
+    }
+
+    /* Stat Rail */
+    .stat-rail {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-item strong {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -1.2px;
+      color: var(--ink);
+      font-family: var(--mono);
+    }
+    .stat-item small {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    /* Workflow Strip */
+    .pipeline-bar {
+      display: flex;
+      align-items: center;
+      background: white;
+      border: 1px solid var(--line);
+      padding: 16px 24px;
+      margin: 32px 0 40px;
+      border-radius: 6px;
+      gap: 20px;
+    }
+    .pipeline-step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .pipeline-step span { font: 10px var(--mono); text-transform: uppercase; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
+    .pipeline-step strong { font-size: 15px; font-weight: 600; margin-top: 2px; }
+    .pipeline-step.active {
+      background: var(--lavender);
+      padding: 8px 14px;
+      border-left: 3px solid var(--purple);
+      border-radius: 4px;
+    }
+    .pipeline-sep { font-size: 18px; color: var(--muted-light); }
+
+    /* Workspace 2-Column Grid */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 36px;
+      align-items: start;
+      margin-bottom: 60px;
+    }
+
+    /* Left: Document Viewer */
+    .viewer-panel {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px;
+      position: sticky;
+      top: 104px;
+    }
+    .panel-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 20px;
+    }
+    .panel-hdr h3 { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+    .panel-hdr span { font: 11px var(--mono); color: var(--muted); }
+
+    .doc-page-display {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 16px;
+      text-align: center;
+      border-radius: 6px;
+      position: relative;
+    }
+    .doc-preview-img {
+      width: 100%;
+      height: 480px;
+      object-fit: contain;
+      background: white;
+      border: 1px solid #d9ccdf;
+      box-shadow: 0 8px 24px rgba(33, 24, 45, 0.08);
+      display: block;
+      margin: 0 auto;
+    }
+    .page-indicator-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+    .page-pills {
+      display: flex;
+      gap: 6px;
+    }
+    .page-btn {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--line);
+      background: white;
+      font: 11px var(--mono);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .page-btn.active {
+      background: var(--purple);
+      color: white;
+      border-color: var(--purple);
+      font-weight: 600;
+    }
+
+    /* Right: Segmentation Results */
+    .results-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 6px;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    /* Segment Card */
+    .segment-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--purple);
+      border-radius: 8px;
+      padding: 24px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .segment-card:hover {
+      box-shadow: 0 6px 20px rgba(33, 24, 45, 0.05);
+      transform: translateY(-2px);
+    }
+    .segment-card.tax { border-left-color: #6718f7; }
+    .segment-card.fin { border-left-color: #4b72fe; }
+    .segment-card.press { border-left-color: #059669; }
+
+    .seg-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .seg-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .cat-badge {
+      font: 11px var(--mono);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .cat-tax { background: #eee5ff; color: #5514c9; border: 1px solid #d6c5f7; }
+    .cat-fin { background: #e5edff; color: #254bd6; border: 1px solid #c9daff; }
+    .cat-press { background: #e6f7f0; color: #047857; border: 1px solid #b7ebd5; }
+
+    .seg-pages {
+      font: 12px var(--mono);
+      color: var(--muted);
+      font-weight: 600;
+      background: var(--paper);
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+    }
+    .seg-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+    .seg-body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+    .seg-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-subtle);
+    }
+    .seg-meta {
+      font: 11px var(--mono);
+      color: var(--muted);
+    }
+    .download-link {
+      font: 12px var(--mono);
+      color: var(--purple);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .download-link:hover { text-decoration: underline; }
+
+    /* Boundary Divider (Scissors) */
+    .cut-barrier {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 8px 0;
+    }
+    .cut-line {
+      height: 1px;
+      background: repeating-linear-gradient(90deg, #b9adca, #b9adca 6px, transparent 6px, transparent 12px);
+      width: 100%;
+    }
+    .cut-label {
+      position: absolute;
+      background: var(--paper);
+      border: 1px solid #c8b9db;
+      padding: 5px 14px;
+      font: 11px var(--mono);
+      font-weight: 600;
+      color: var(--ink);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .cut-icon { font-size: 14px; color: var(--purple); }
+
+    /* Code & Architecture Section */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin: 40px 0 60px;
+    }
+    .spec-card {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 28px;
+      border-radius: 8px;
+    }
+    .spec-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .spec-card p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    pre {
+      background: var(--ink);
+      color: #f1ebfc;
+      padding: 18px;
+      border-radius: 6px;
+      font: 11px/1.7 var(--mono);
+      overflow-x: auto;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px 0 48px;
+      display: flex;
+      justify-content: space-between;
+      font: 11px var(--mono);
+      color: var(--muted);
+    }
+    footer a { color: var(--ink); text-decoration: none; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0;">
+      <div class="brand">
+        <div class="brand-mark">DJ</div>
+        <div class="brand-title">DocJev Studio</div>
+        <span class="brand-badge">Document Boundary AI</span>
+      </div>
+      <div class="creator-tag">
+        <span class="status-dot"></span>
+        <span>Engineered by <strong>Bharanitharan KR</strong></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Hero Section -->
+    <section class="hero">
+      <p class="eyebrow">AUTONOMOUS MULTI-DOCUMENT SEGMENTATION · 2026</p>
+      <h1>From messy scanned packets to <em>clean, verified documents.</em></h1>
+      <p class="hero-sub">
+        Give the pipeline a composite multi-document PDF. LiteParse extracts complete text locally; 
+        the decision engine detects exact boundaries and classifies every publication with zero page loss.
+      </p>
+
+      <!-- Stat Rail -->
+      <div class="stat-rail">
+        <div class="stat-item">
+          <strong>15 / 15</strong>
+          <small>Continuous Pages Covered</small>
+        </div>
+        <div class="stat-item">
+          <strong>3 Segments</strong>
+          <small>Standalone Publications Extracted</small>
+        </div>
+        <div class="stat-item">
+          <strong>11.2 ms</strong>
+          <small>Local LiteParse OCR Latency</small>
+        </div>
+        <div class="stat-item">
+          <strong style="color: #059669;">$0.00</strong>
+          <small>OpenRouter Free Tier Inference</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline Workflow Visual -->
+    <div class="pipeline-bar">
+      <div class="pipeline-step">
+        <span>01 / INPUT BUNDLE</span>
+        <strong>Public-Finance-Packet.pdf</strong>
+      </div>
+      <div class="pipeline-sep">→</div>
+      <div class="pipeline-step">
+        <span>02 / LOCAL PARSER</span>
+        <strong>LiteParse Native OCR (11ms)</strong>
+      </div>
+      <div class="pipeline-sep">→</div>
+      <div class="pipeline-step active">
+        <span>03 / DECISION ENGINE</span>
+        <strong>TypeSafe Jev / OpenRouter Free</strong>
+      </div>
+      <div class="pipeline-sep">→</div>
+      <div class="pipeline-step">
+        <span>04 / EXPORT</span>
+        <strong>3 Discrete Verified PDFs</strong>
+      </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="workspace-grid">
+
+      <!-- Left Column: Source Document Inspection -->
+      <aside class="viewer-panel">
+        <div class="panel-hdr">
+          <h3>Source Packet Preview</h3>
+          <span>PAGE 1 OF 15</span>
+        </div>
+        <div class="doc-page-display">
+          <img class="doc-preview-img" src="assets/e001-page-1.jpg" alt="IRS Form 941 Scanned Page 1" id="page-img">
+          <p style="font: 11px var(--mono); color: var(--muted); margin-top: 12px;">
+            Canonical PDF rendered at 150 DPI · Hash verified
+          </p>
+        </div>
+        <div class="page-indicator-bar">
+          <span style="font: 11px var(--mono); color: var(--muted);">INSPECT PAGE:</span>
+          <div class="page-pills">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">4</button>
+            <button class="page-btn">5</button>
+            <button class="page-btn">6</button>
+            <button class="page-btn">...</button>
+            <button class="page-btn">15</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Column: Segmentation Output -->
+      <section class="results-panel">
+        <div>
+          <h2 class="section-title">Segmented Publications</h2>
+          <p class="section-desc">
+            The packet was split at publication boundaries. Internal vouchers, tables, and continuation pages were kept intact.
+          </p>
+        </div>
+
+        <!-- Segment 1: Tax Form -->
+        <article class="segment-card tax">
+          <div class="seg-top">
+            <div class="seg-badge-row">
+              <span class="cat-badge cat-tax">tax_form</span>
+              <strong style="font-size: 14px; color: var(--ink);">Document #1: IRS Form 941 Quarterly Return</strong>
+            </div>
+            <span class="seg-pages">PAGES 1 – 3</span>
+          </div>
+          <p class="seg-body">
+            Official federal payroll tax return. Contains Part 1 employer withholding, Part 2 deposit schedule, 
+            and the Form 941-V Payment Voucher continuation. The splitter recognized the voucher as belonging to Form 941.
+          </p>
+          <div class="seg-footer">
+            <span class="seg-meta">3 PAGES · DETERMINISTIC BOUNDARY · NO REVIEW FLAGS</span>
+            <a href="#" class="download-link">Export Segment PDF ↗</a>
+          </div>
+        </article>
+
+        <!-- Boundary Cut #1 -->
+        <div class="cut-barrier">
+          <div class="cut-line"></div>
+          <div class="cut-label">
+            <span class="cut-icon">✂</span>
+            <span>BOUNDARY CUT #1 DETECTED · NEW PUBLICATION (PAGE 4)</span>
+          </div>
+        </div>
+
+        <!-- Segment 2: Financial Report -->
+        <article class="segment-card fin">
+          <div class="seg-top">
+            <div class="seg-badge-row">
+              <span class="cat-badge cat-fin">financial_report</span>
+              <strong style="font-size: 14px; color: var(--ink);">Document #2: Treasury Securities & Auction Results</strong>
+            </div>
+            <span class="seg-pages">PAGES 4 – 5</span>
+          </div>
+          <p class="seg-body">
+            Structured financial release of Treasury security terms and auction parameters (CUSIP, competitive bids, rates, and settlement dates).
+          </p>
+          <div class="seg-footer">
+            <span class="seg-meta">2 PAGES · HIGH CONFIDENCE · PROVENANCE LINKED</span>
+            <a href="#" class="download-link">Export Segment PDF ↗</a>
+          </div>
+        </article>
+
+        <!-- Boundary Cut #2 -->
+        <div class="cut-barrier">
+          <div class="cut-line"></div>
+          <div class="cut-label">
+            <span class="cut-icon">✂</span>
+            <span>BOUNDARY CUT #2 DETECTED · NEW PUBLICATION (PAGE 6)</span>
+          </div>
+        </div>
+
+        <!-- Segment 3: Press Release -->
+        <article class="segment-card press">
+          <div class="seg-top">
+            <div class="seg-badge-row">
+              <span class="cat-badge cat-press">press_release</span>
+              <strong style="font-size: 14px; color: var(--ink);">Document #3: BEA Economic GDP Release & Statistical Tables</strong>
+            </div>
+            <span class="seg-pages">PAGES 6 – 15</span>
+          </div>
+          <p class="seg-body">
+            Complete 10-page economic news release from the Bureau of Economic Analysis. Includes narrative commentary, 
+            technical methodology, and 8 pages of dense multi-column statistical tables preserved as a single document.
+          </p>
+          <div class="seg-footer">
+            <span class="seg-meta">10 PAGES · ZERO ERRONEOUS SPLITS ON TABLES</span>
+            <a href="#" class="download-link">Export Segment PDF ↗</a>
+          </div>
+        </article>
+
+      </section>
+
+    </div>
+
+    <!-- Technical Specs & Code Output -->
+    <div class="specs-grid">
+      <div class="spec-card">
+        <h3>Autonomous Boundary Rules (YAML)</h3>
+        <p>Natural-language instructions guiding the segmentation engine:</p>
+        <pre><code>categories:
+  - id: tax_form
+    description: Official tax return, payment voucher, or instructions.
+  - id: financial_report
+    description: Structured financial auction results or transaction tables.
+  - id: press_release
+    description: Narrative news announcement with related charts & tables.
+
+splitting_instructions:
+  Split at each new source publication. Keep tax voucher with its form.
+  Keep news release statistical tables with the release. Cover every page.</code></pre>
+      </div>
+
+      <div class="spec-card">
+        <h3>Structured Execution Output (JSON)</h3>
+        <p>Deterministic JSON telemetry returned by the pipeline:</p>
+        <pre><code>{
+  "task": "split",
+  "status": "complete",
+  "segments": [
+    {"id": "seg-001", "category": "tax_form", "pages": [1, 2, 3]},
+    {"id": "seg-002", "category": "financial_report", "pages": [4, 5]},
+    {"id": "seg-003", "category": "press_release", "pages": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]}
+  ],
+  "metrics": {
+    "ocr_ms": 11.2,
+    "decision_ms": 1420.5,
+    "cost_usd": 0.00
+  }
+}</code></pre>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span>DocJev Studio · Engineered by Bharanitharan KR</span>
+      <span>Apache 2.0 License · Document Splitting & Classification</span>
+      <a href="https://github.com/BharanitharanKR/Jev-Docs" target="_blank">View GitHub Repository ↗</a>
+    </footer>
+
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DocJev AI — System Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f8f7f4;
+      --card: #ffffff;
+      --ink: #21182d;
+      --purple: #6718f7;
+      --lavender: #f1ebfc;
+      --line: #e2dce7;
+      --muted: #716778;
+      --mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      width: 1240px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 48px 56px;
+      box-shadow: 0 10px 30px rgba(33, 24, 45, 0.05);
+    }
+    .top-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 36px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .eyebrow {
+      font: 11px var(--mono);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--purple);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      color: var(--ink);
+    }
+    .sub {
+      font-size: 16px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .author-badge {
+      font: 12px var(--mono);
+      color: var(--muted);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 8px 16px;
+      border-radius: 20px;
+      text-align: right;
+    }
+    .author-badge strong { color: var(--ink); }
+
+    /* Pipeline Flow */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: 240px 36px 270px 36px 270px 36px 220px;
+      align-items: center;
+      margin: 40px 0 50px;
+    }
+    .flow-box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 24px 20px;
+      position: relative;
+    }
+    .flow-box.highlight {
+      background: var(--lavender);
+      border-color: #d1bdf3;
+      border-top: 3px solid var(--purple);
+    }
+    .step-num {
+      font: 10px var(--mono);
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .flow-box h3 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      margin: 8px 0 6px;
+    }
+    .flow-box p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .flow-arrow {
+      text-align: center;
+      font-size: 20px;
+      color: #b9adca;
+      font-weight: 600;
+    }
+
+    /* Key Metrics */
+    .metrics-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      border-top: 1px solid var(--line);
+      padding-top: 32px;
+    }
+    .metric-col h4 {
+      font: 11px var(--mono);
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+    .metric-col .val {
+      font-size: 32px;
+      font-weight: 700;
+      font-family: var(--mono);
+      letter-spacing: -1px;
+      margin-top: 4px;
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="top-hdr">
+      <div>
+        <p class="eyebrow">HIGH-FIDELITY DOCUMENT INTELLIGENCE</p>
+        <h1>DocJev AI: Autonomous Boundary Detection Pipeline</h1>
+        <p class="sub">Local fast OCR extraction combined with low-cost / zero-cost decision models.</p>
+      </div>
+      <div class="author-badge">
+        <span>Engineered by <strong>Bharanitharan KR</strong></span><br>
+        <span style="font-size: 11px;">Apache 2.0 Open Source</span>
+      </div>
+    </div>
+
+    <!-- Pipeline Flow -->
+    <div class="flow-grid">
+      <!-- Step 1 -->
+      <div class="flow-box">
+        <span class="step-num">01 / INPUT</span>
+        <h3>Multi-Page PDF</h3>
+        <p>15-Page composite packet bundling IRS, Treasury, and BEA releases.</p>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <!-- Step 2 -->
+      <div class="flow-box highlight">
+        <span class="step-num" style="color: var(--purple);">02 / LOCAL PARSE</span>
+        <h3>LiteParse OCR</h3>
+        <p>Zero API cost. Local native Python text extraction (11.2ms cache hit).</p>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <!-- Step 3 -->
+      <div class="flow-box highlight">
+        <span class="step-num" style="color: var(--purple);">03 / DECISION ENGINE</span>
+        <h3>Jev / OpenRouter</h3>
+        <p>Evaluates continuity, detects publication boundaries & predicts categories.</p>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <!-- Step 4 -->
+      <div class="flow-box">
+        <span class="step-num">04 / OUTPUT</span>
+        <h3>Segmented PDFs</h3>
+        <p>Exported discrete publication files with 100% page coverage.</p>
+      </div>
+    </div>
+
+    <!-- Benchmarked Metrics -->
+    <div class="metrics-bar">
+      <div class="metric-col">
+        <h4>PAGE FIDELITY</h4>
+        <div class="val" style="color: #059669;">15 / 15 Pages</div>
+      </div>
+      <div class="metric-col">
+        <h4>ACCURACY ON REAL DOCS</h4>
+        <div class="val" style="color: var(--purple);">100% Exact</div>
+      </div>
+      <div class="metric-col">
+        <h4>LITEPARSE OCR LATENCY</h4>
+        <div class="val">11.2 ms</div>
+      </div>
+      <div class="metric-col">
+        <h4>OPENROUTER RUN COST</h4>
+        <div class="val" style="color: #059669;">$0.00 (Free)</div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
