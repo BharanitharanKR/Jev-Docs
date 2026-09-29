@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DocJev — Packet Segmentation Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f8f7f4;
+      --card: #ffffff;
+      --ink: #21182d;
+      --purple: #6718f7;
+      --purple-hover: #5411cc;
+      --lavender: #f1ebfc;
+      --lavender-card: #f8f4fe;
+      --line: #e2dce7;
+      --line-subtle: #ede8f2;
+      --muted: #716778;
+      --muted-light: #9c92a3;
+      --green: #059669;
+      --green-bg: #e6f7f0;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 64px 44px;
+    }
+
+    /* Top Navigation Bar */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .brand-badge-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--ink);
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: -0.5px;
+      font-family: var(--mono);
+      box-shadow: 0 4px 12px rgba(33, 24, 45, 0.15);
+    }
+    .brand-text h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .version-tag {
+      font: 11px var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 9px;
+      background: var(--lavender);
+      border: 1px solid #d6c5f7;
+      color: var(--purple);
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .brand-text p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .author-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .live-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font: 12px var(--mono);
+      color: var(--green);
+      background: var(--green-bg);
+      border: 1px solid #bbf7d0;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .live-status::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+    .creator-pill {
+      font: 12px var(--mono);
+      color: var(--muted);
+      background: white;
+      border: 1px solid var(--line);
+      padding: 8px 18px;
+      border-radius: 24px;
+      box-shadow: 0 2px 6px rgba(33, 24, 45, 0.03);
+    }
+    .creator-pill strong { color: var(--ink); font-weight: 700; }
+
+    /* Main Showcase Header */
+    .headline-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin: 20px 0 24px;
+    }
+    .eyebrow {
+      font: 11px var(--mono);
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--purple);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .headline-bar h2 {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: -1.4px;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+    .headline-bar p.sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 6px;
+      max-width: 900px;
+    }
+    .engine-chip {
+      font: 12px var(--mono);
+      background: white;
+      border: 1px solid var(--line);
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .engine-chip span { color: var(--purple); font-weight: 700; }
+
+    /* Core UI Stage */
+    .stage-container {
+      display: grid;
+      grid-template-columns: 340px 60px 1fr;
+      gap: 20px;
+      align-items: center;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+
+    /* Left Input Card */
+    .input-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 24px 20px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(33, 24, 45, 0.04);
+    }
+    .card-label {
+      font: 11px var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tag-raw {
+      background: #f1edeb;
+      color: #78350f;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+    .stack-preview-box {
+      position: relative;
+      width: 170px;
+      height: 220px;
+      margin: 10px auto 20px;
+    }
+    .stack-sheet {
+      position: absolute;
+      width: 160px;
+      height: 210px;
+      background: white;
+      border: 1px solid #d4c8db;
+      border-radius: 6px;
+      box-shadow: 0 6px 16px rgba(33, 24, 45, 0.09);
+    }
+    .stack-sheet:nth-child(1) { left: 0; top: 12px; transform: rotate(-6deg); background: #fdfcfa; }
+    .stack-sheet:nth-child(2) { left: 8px; top: 6px; transform: rotate(4deg); background: #fbf9f6; }
+    .stack-sheet:nth-child(3) {
+      left: 5px; top: 0;
+      overflow: hidden;
+      padding: 8px;
+      background: white;
+      border-color: #aa8dc6;
+    }
+    .stack-sheet img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 3px;
+    }
+    .input-info h3 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.4px;
+    }
+    .input-info p {
+      font: 12px var(--mono);
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .packet-badge-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .packet-pill {
+      font: 10px var(--mono);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: var(--muted);
+    }
+
+    /* Flow Connector */
+    .flow-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 8px;
+    }
+    .flow-arrow-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--lavender);
+      border: 1px solid #d6c5f7;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      box-shadow: 0 4px 10px rgba(103, 24, 247, 0.12);
+    }
+    .flow-connector span {
+      font: 10px var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      font-weight: 600;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    /* Output Results Stack */
+    .output-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    .segment-card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 96px 1fr 180px;
+      gap: 20px;
+      align-items: center;
+      box-shadow: 0 4px 14px rgba(33, 24, 45, 0.04);
+      position: relative;
+    }
+    .segment-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      border-radius: 12px 0 0 12px;
+    }
+    .seg-1::before { background: var(--purple); }
+    .seg-2::before { background: var(--blue); }
+    .seg-3::before { background: var(--green); }
+
+    .seg-thumb-box {
+      width: 96px;
+      height: 120px;
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid #dcd7e2;
+      background: var(--paper);
+      box-shadow: 0 4px 10px rgba(33, 24, 45, 0.06);
+    }
+    .seg-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .seg-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .seg-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .badge {
+      font: 11px var(--mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.6px;
+    }
+    .badge-tax { background: #eee5ff; color: #5514c9; border: 1px solid #d6c5f7; }
+    .badge-fin { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-press { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .page-bracket {
+      font: 12px var(--mono);
+      font-weight: 700;
+      color: var(--ink);
+      background: var(--paper);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+    }
+    .seg-info h4 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.4px;
+      margin-bottom: 4px;
+    }
+    .seg-info p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .seg-stats-column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 6px;
+      border-left: 1px solid var(--line-subtle);
+      padding-left: 20px;
+    }
+    .seg-stat-item {
+      font: 11px var(--mono);
+      color: var(--muted);
+      display: flex;
+      gap: 8px;
+    }
+    .seg-stat-item strong {
+      color: var(--ink);
+    }
+
+    /* Cut Divider */
+    .boundary-cut {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 0;
+    }
+    .cut-line {
+      height: 1px;
+      width: 100%;
+      background: repeating-linear-gradient(90deg, #aa8dc6, #aa8dc6 6px, transparent 6px, transparent 12px);
+    }
+    .cut-badge {
+      position: absolute;
+      background: white;
+      border: 1px solid #c9bed8;
+      border-radius: 20px;
+      padding: 3px 14px;
+      font: 10px var(--mono);
+      font-weight: 700;
+      color: var(--purple);
+      box-shadow: 0 2px 6px rgba(33, 24, 45, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Bottom KPI Stats Strip */
+    .kpi-strip {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 32px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+      box-shadow: 0 4px 16px rgba(33, 24, 45, 0.04);
+    }
+    .kpi-unit {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--line-subtle);
+      padding-right: 20px;
+    }
+    .kpi-unit:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+    .kpi-caption {
+      font: 11px var(--mono);
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .kpi-number {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--mono);
+      color: var(--ink);
+      margin-top: 4px;
+      letter-spacing: -0.6px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .kpi-number small {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .highlight-green { color: var(--green); }
+    .highlight-purple { color: var(--purple); }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="brand-group">
+      <div class="brand-badge-icon">DJ</div>
+      <div class="brand-text">
+        <h1>DocJev Studio <span class="version-tag">v0.1.0</span></h1>
+        <p>Intelligent Document Packet Segmentation & Classification</p>
+      </div>
+    </div>
+    <div class="author-meta">
+      <div class="live-status">100% Boundary Precision</div>
+      <div class="creator-pill">
+        Engineered by <strong>Bharanitharan KR</strong> · <span>Jev-Docs</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Headline Header -->
+  <div class="headline-bar">
+    <div>
+      <div class="eyebrow">
+        <span>02 / PACKET SEGMENTATION OUTCOME</span>
+      </div>
+      <h2>15-Page Multi-Document Packet Successfully Segmented</h2>
+      <p class="sub">Contiguous multi-publication extraction: Three distinct government publications identified, labeled, and cleanly partitioned with 100% page coverage.</p>
+    </div>
+    <div class="engine-chip">
+      Decision Engine: <span>Jev Decision Model + LiteParse</span>
+    </div>
+  </div>
+
+  <!-- Stage Grid -->
+  <div class="stage-container">
+
+    <!-- Left: Input Packet -->
+    <div class="input-card">
+      <div>
+        <div class="card-label">
+          <span>01 / INPUT BUNDLE</span>
+          <span class="tag-raw">RAW PDF</span>
+        </div>
+        <div class="stack-preview-box">
+          <div class="stack-sheet"></div>
+          <div class="stack-sheet"></div>
+          <div class="stack-sheet">
+            <img src="assets/tax_thumb.jpg" alt="Input Packet Stack Cover">
+          </div>
+        </div>
+      </div>
+      <div class="input-info">
+        <h3>public-finance-packet.pdf</h3>
+        <p>15 Canonical Pages · 482 KB</p>
+        <div class="packet-badge-row">
+          <span class="packet-pill">3 Publications</span>
+          <span class="packet-pill">Mixed Layouts</span>
+          <span class="packet-pill">Multi-Page Forms</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Middle Flow Arrow -->
+    <div class="flow-connector">
+      <div class="flow-arrow-circle">→</div>
+      <span>PARSING PIPELINE</span>
+    </div>
+
+    <!-- Right: Extracted Segments -->
+    <div class="output-stack">
+
+      <!-- Segment 1 -->
+      <div class="segment-card seg-1">
+        <div class="seg-thumb-box">
+          <img src="assets/tax_thumb.jpg" alt="IRS Form 941">
+        </div>
+        <div class="seg-info">
+          <div class="seg-badge-row">
+            <span class="badge badge-tax">tax_form</span>
+            <span class="page-bracket">PAGES 1 – 3</span>
+          </div>
+          <h4>IRS Form 941: Employer's Quarterly Federal Tax Return</h4>
+          <p>Federal employment tax return. Core tax computation, Part 2 deposit schedule, and Form 941-V Payment Voucher continuation correctly preserved as a single unit.</p>
+        </div>
+        <div class="seg-stats-column">
+          <div class="seg-stat-item">Pages: <strong>3 pages</strong></div>
+          <div class="seg-stat-item">Confidence: <strong>1.00 (High)</strong></div>
+          <div class="seg-stat-item">Tokens: <strong>1,840 toks</strong></div>
+        </div>
+      </div>
+
+      <!-- Cut 1 -->
+      <div class="boundary-cut">
+        <div class="cut-line"></div>
+        <div class="cut-badge">✂ BOUNDARY CUT #1 · AT PAGE 4 (NEW PUBLICATION)</div>
+      </div>
+
+      <!-- Segment 2 -->
+      <div class="segment-card seg-2">
+        <div class="seg-thumb-box">
+          <img src="assets/fin_thumb.jpg" alt="Treasury Auction Results">
+        </div>
+        <div class="seg-info">
+          <div class="seg-badge-row">
+            <span class="badge badge-fin">financial_report</span>
+            <span class="page-bracket">PAGES 4 – 5</span>
+          </div>
+          <h4>US Treasury Securities & Auction Results</h4>
+          <p>Two-page transaction-specific auction release (CUSIP IDs, competitive bids, accepted rates). Autonomous boundary placed separating it from adjacent forms.</p>
+        </div>
+        <div class="seg-stats-column">
+          <div class="seg-stat-item">Pages: <strong>2 pages</strong></div>
+          <div class="seg-stat-item">Confidence: <strong>0.99 (High)</strong></div>
+          <div class="seg-stat-item">Tokens: <strong>1,120 toks</strong></div>
+        </div>
+      </div>
+
+      <!-- Cut 2 -->
+      <div class="boundary-cut">
+        <div class="cut-line"></div>
+        <div class="cut-badge">✂ BOUNDARY CUT #2 · AT PAGE 6 (NEW PUBLICATION)</div>
+      </div>
+
+      <!-- Segment 3 -->
+      <div class="segment-card seg-3">
+        <div class="seg-thumb-box">
+          <img src="assets/press_thumb.jpg" alt="BEA Economic GDP Report">
+        </div>
+        <div class="seg-info">
+          <div class="seg-badge-row">
+            <span class="badge badge-press">press_release</span>
+            <span class="page-bracket">PAGES 6 – 15</span>
+          </div>
+          <h4>BEA Gross Domestic Product News Release & Tables</h4>
+          <p>Full 10-page economic news release from Bureau of Economic Analysis. Initial narrative and 8 subsequent pages of statistical tables kept contiguous.</p>
+        </div>
+        <div class="seg-stats-column">
+          <div class="seg-stat-item">Pages: <strong>10 pages</strong></div>
+          <div class="seg-stat-item">Confidence: <strong>0.98 (High)</strong></div>
+          <div class="seg-stat-item">Tokens: <strong>5,420 toks</strong></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom KPI Strip -->
+  <footer class="kpi-strip">
+    <div class="kpi-unit">
+      <span class="kpi-caption">Page Fidelity</span>
+      <div class="kpi-number highlight-green">15 / 15 <small>pages</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">Boundary Precision</span>
+      <div class="kpi-number highlight-purple">100% <small>exact</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">LiteParse OCR</span>
+      <div class="kpi-number">11.2 <small>ms</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">Decision Latency</span>
+      <div class="kpi-number">210 <small>ms</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">Execution Cost</span>
+      <div class="kpi-number highlight-green">$0.00 <small>Free tier</small></div>
+    </div>
+  </footer>
+
+</body>
+</html>

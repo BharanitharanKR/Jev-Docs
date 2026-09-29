@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DocJev — Benchmark Performance & Accuracy Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f8f7f4;
+      --card: #ffffff;
+      --ink: #21182d;
+      --purple: #6718f7;
+      --lavender: #f1ebfc;
+      --lavender-card: #f8f4fe;
+      --blue: #2563eb;
+      --blue-light: #eff6ff;
+      --line: #e2dce7;
+      --line-subtle: #ede8f2;
+      --muted: #716778;
+      --muted-light: #9c92a3;
+      --green: #059669;
+      --green-bg: #e6f7f0;
+      --mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 64px 44px;
+    }
+
+    /* Top Navigation */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .brand-badge-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--ink);
+      color: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: -0.5px;
+      font-family: var(--mono);
+      box-shadow: 0 4px 12px rgba(33, 24, 45, 0.15);
+    }
+    .brand-text h1 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .version-tag {
+      font: 11px var(--mono);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 9px;
+      background: var(--lavender);
+      border: 1px solid #d6c5f7;
+      color: var(--purple);
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .brand-text p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .author-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .live-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font: 12px var(--mono);
+      color: var(--green);
+      background: var(--green-bg);
+      border: 1px solid #bbf7d0;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .live-status::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+    .creator-pill {
+      font: 12px var(--mono);
+      color: var(--muted);
+      background: white;
+      border: 1px solid var(--line);
+      padding: 8px 18px;
+      border-radius: 24px;
+      box-shadow: 0 2px 6px rgba(33, 24, 45, 0.03);
+    }
+    .creator-pill strong { color: var(--ink); font-weight: 700; }
+
+    /* Headline Section */
+    .headline-bar {
+      margin: 18px 0 20px;
+    }
+    .eyebrow {
+      font: 11px var(--mono);
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--purple);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .hero-title {
+      font-size: 46px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: var(--ink);
+      line-height: 1.05;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--purple);
+    }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      margin-top: 8px;
+      max-width: 1000px;
+      line-height: 1.4;
+    }
+
+    /* Pipeline Strip */
+    .pipeline-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(33, 24, 45, 0.03);
+    }
+    .pipe-step {
+      display: flex;
+      flex-direction: column;
+    }
+    .pipe-step strong {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .pipe-step small {
+      font: 11px var(--mono);
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .pipe-arrow {
+      color: #b9adca;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .pipe-step.active {
+      background: var(--lavender);
+      padding: 6px 14px;
+      border-radius: 6px;
+      border-left: 3px solid var(--purple);
+    }
+    .pipe-step.active strong { color: var(--purple); }
+
+    /* Scorecards Grid */
+    .scorecards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+      margin-bottom: 24px;
+    }
+
+    .scorecard {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 26px 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(33, 24, 45, 0.04);
+      position: relative;
+    }
+    .scorecard.featured {
+      background: linear-gradient(180deg, #faf7ff 0%, #ffffff 100%);
+      border-color: #d6c5f7;
+    }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card-head h3 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.6px;
+      color: var(--ink);
+    }
+    .card-num {
+      font: 11px var(--mono);
+      font-weight: 700;
+      color: var(--purple);
+      background: var(--lavender);
+      padding: 3px 9px;
+      border-radius: 4px;
+      border: 1px solid #d6c5f7;
+    }
+
+    /* Head-to-Head Comparison Bars */
+    .comparison-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 14px 0 18px;
+    }
+    .engine-box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .engine-name {
+      font: 12px var(--mono);
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .engine-name strong { color: var(--purple); }
+    .engine-time {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin: 10px 0 8px;
+    }
+    .engine-time strong {
+      font-size: 54px;
+      font-weight: 800;
+      letter-spacing: -2px;
+      font-family: var(--mono);
+      line-height: 1;
+      color: var(--ink);
+    }
+    .engine-time small {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .progress-bar {
+      height: 8px;
+      background: #e5dfec;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .bar-fill-purple {
+      height: 100%;
+      background: var(--purple);
+      border-radius: 4px;
+    }
+    .bar-fill-blue {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 4px;
+    }
+    .engine-acc {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .engine-acc b {
+      color: var(--green);
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .conclusion-bar {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .speedup-badge {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+    .speedup-badge strong {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--mono);
+      color: var(--purple);
+      letter-spacing: -0.8px;
+    }
+
+    /* Bottom KPI Stats Strip */
+    .kpi-strip {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px 32px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+      box-shadow: 0 4px 16px rgba(33, 24, 45, 0.04);
+    }
+    .kpi-unit {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--line-subtle);
+      padding-right: 20px;
+    }
+    .kpi-unit:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+    .kpi-caption {
+      font: 11px var(--mono);
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+    .kpi-number {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--mono);
+      color: var(--ink);
+      margin-top: 4px;
+      letter-spacing: -0.6px;
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .kpi-number small {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .highlight-green { color: var(--green); }
+    .highlight-purple { color: var(--purple); }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="topbar">
+    <div class="brand-group">
+      <div class="brand-badge-icon">DJ</div>
+      <div class="brand-text">
+        <h1>DocJev Benchmark Studio <span class="version-tag">Suite v1.2</span></h1>
+        <p>Deterministic Document Processing & Multi-Model Evaluation</p>
+      </div>
+    </div>
+    <div class="author-meta">
+      <div class="live-status">100 Tasks Completed</div>
+      <div class="creator-pill">
+        Engineered by <strong>Bharanitharan KR</strong> · <span>Jev-Docs</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Headline Header -->
+  <div class="headline-bar">
+    <div class="eyebrow">03 / REAL-DOCUMENT BENCHMARK REPORT</div>
+    <h2 class="hero-title">Classify in <em>139 ms.</em> Split in <em>210 ms.</em></h2>
+    <p class="hero-sub">Evaluation across 40 real-world government PDFs and 8 constructed multi-document packets. DocJev couples lightweight local OCR with fast typed decisions, cutting inference latency by up to 6.45× with 100% boundary accuracy.</p>
+  </div>
+
+  <!-- Pipeline Strip -->
+  <div class="pipeline-bar">
+    <div class="pipe-step">
+      <strong>40 Real Documents</strong>
+      <small>Tax forms, fund statements, releases</small>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <strong>LiteParse OCR (Local)</strong>
+      <small>Identical extracted page text (11.2ms)</small>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step active">
+      <strong>DocJev Decision Engine</strong>
+      <small>Typed decision model (139ms – 210ms)</small>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <strong>Structured Segments</strong>
+      <small>Exact page ranges & labels</small>
+    </div>
+  </div>
+
+  <!-- Scorecards Grid -->
+  <div class="scorecards-grid">
+
+    <!-- Card 1: Classification -->
+    <article class="scorecard featured">
+      <div>
+        <div class="card-head">
+          <h3>Classify the Document</h3>
+          <span class="card-num">01 / CLASSIFY</span>
+        </div>
+        <div class="comparison-block">
+          <div class="engine-box" style="border-color: #d6c5f7; background: #faf7ff;">
+            <div class="engine-name"><strong>DocJev / Jev</strong> <span>OUR ENGINE</span></div>
+            <div class="engine-time">
+              <strong>139</strong><small>ms</small>
+            </div>
+            <div class="progress-bar">
+              <div class="bar-fill-purple" style="width: 25%;"></div>
+            </div>
+            <div class="engine-acc">Accuracy: <b>40 / 40 (100%)</b></div>
+          </div>
+          <div class="engine-box">
+            <div class="engine-name"><span>GPT-5.6 Luna</span> <span>RAW LLM</span></div>
+            <div class="engine-time">
+              <strong>794</strong><small>ms</small>
+            </div>
+            <div class="progress-bar">
+              <div class="bar-fill-blue" style="width: 100%;"></div>
+            </div>
+            <div class="engine-acc">Accuracy: <b>40 / 40 (100%)</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="conclusion-bar">
+        <div class="speedup-badge">
+          <strong>5.73×</strong> <span>Faster median decision latency</span>
+        </div>
+        <span style="font-size: 12px; font-family: var(--mono); color: var(--green);">● Equal 100% Accuracy</span>
+      </div>
+    </article>
+
+    <!-- Card 2: Splitting -->
+    <article class="scorecard">
+      <div>
+        <div class="card-head">
+          <h3>Find the Boundaries</h3>
+          <span class="card-num">02 / SPLIT</span>
+        </div>
+        <div class="comparison-block">
+          <div class="engine-box" style="border-color: #d6c5f7; background: #faf7ff;">
+            <div class="engine-name"><strong>DocJev / Jev</strong> <span>OUR ENGINE</span></div>
+            <div class="engine-time">
+              <strong>210</strong><small>ms</small>
+            </div>
+            <div class="progress-bar">
+              <div class="bar-fill-purple" style="width: 22%;"></div>
+            </div>
+            <div class="engine-acc">True Boundaries: <b>32 / 32 (100%)</b></div>
+          </div>
+          <div class="engine-box">
+            <div class="engine-name"><span>GPT-5.6 Luna</span> <span>RAW LLM</span></div>
+            <div class="engine-time">
+              <strong>1,352</strong><small>ms</small>
+            </div>
+            <div class="progress-bar">
+              <div class="bar-fill-blue" style="width: 100%;"></div>
+            </div>
+            <div class="engine-acc">True Boundaries: <b>32 / 32 (100%)</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="conclusion-bar">
+        <div class="speedup-badge">
+          <strong>6.45×</strong> <span>Faster packet splitting latency</span>
+        </div>
+        <span style="font-size: 12px; font-family: var(--mono); color: var(--green);">● 100% True Boundary Recall</span>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Bottom KPI Strip -->
+  <footer class="kpi-strip">
+    <div class="kpi-unit">
+      <span class="kpi-caption">Corpus Evaluated</span>
+      <div class="kpi-number">40 <small>real PDFs</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">Packets Assembled</span>
+      <div class="kpi-number">8 <small>packets</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">Pages Processed</span>
+      <div class="kpi-number">116 <small>pages</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">Total Benchmark Cost</span>
+      <div class="kpi-number highlight-green">6.8¢ <small>all 100 tasks</small></div>
+    </div>
+    <div class="kpi-unit">
+      <span class="kpi-caption">Cost Reduction</span>
+      <div class="kpi-number highlight-purple">98.4% <small>vs raw LLM</small></div>
+    </div>
+  </footer>
+
+</body>
+</html>
