@@ -459,7 +459,7 @@ def create_app(project_dir: str | Path | None = None, run_dir: str | Path | None
     ) -> dict[str, Any]:
         if task not in {"classify", "split"} or ocr not in {"liteparse", "llamaparse"}:
             raise HTTPException(422, "Choose a valid task and OCR provider.")
-        if tier not in {"cost_effective", "agentic", "agentic_plus"} or engine not in {"jev", "openai"}:
+        if tier not in {"cost_effective", "agentic", "agentic_plus"} or engine not in {"jev", "openai", "openrouter", "gemini"}:
             raise HTTPException(422, "Choose a valid parsing tier and decision engine.")
         if bool(sample_id) == bool(file):
             raise HTTPException(422, "Choose one sample or upload one document.")

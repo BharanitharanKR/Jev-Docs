@@ -14,6 +14,10 @@ def make_engine(name: str = "jev", model: str | None = None):
         from .openai import OpenAIEngine
 
         return OpenAIEngine(model=model or "gpt-5.6-luna")
+    if name == "gemini":
+        from .gemini import GeminiEngine
+
+        return GeminiEngine(model=model or "gemini-2.0-flash")
     from ..errors import JevDocsError
 
-    raise JevDocsError("Engine must be 'jev', 'openrouter', or 'openai'.")
+    raise JevDocsError("Engine must be 'jev', 'openrouter', 'openai', or 'gemini'.")
