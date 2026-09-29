@@ -29,21 +29,39 @@ class JevEngine:
         model: str = "jev-1.13.0",
         *,
         api_key: str | None = None,
+        base_url: str | None = None,
         timeout: float = 30,
         max_retries: int = 1,
         window_size: int = 8,
         context_recovery: bool = True,
     ):
-        if not (api_key or os.getenv("TYPESAFE_API_KEY")):
+        key = api_key or os.getenv("TYPESAFE_API_KEY") or os.getenv("OPENROUTER_API_KEY")
+        if not key:
             raise ProviderError(
-                "Set TYPESAFE_API_KEY to use Jev. Get access at console.typesafe.ai."
+                "Set TYPESAFE_API_KEY (from console.typesafe.ai) or OPENROUTER_API_KEY to use Jev."
             )
+        resolved_base_url = base_url or os.getenv("TYPESAFE_BASE_URL")
+        is_openrouter = (
+            key.startswith("sk-or-")
+            or bool(os.getenv("OPENROUTER_API_KEY"))
+            or bool(resolved_base_url and "openrouter.ai" in resolved_base_url)
+        )
+        if is_openrouter:
+            if not resolved_base_url:
+                resolved_base_url = "https://openrouter.ai/api"
+            if model in ("jev-1.13.0", "jev-1.13"):
+                model = "typesafe/jev-1.13"
+
         self.model = model
         self.max_retries = max_retries
         self.window_size = window_size
         self.context_recovery = context_recovery
         self.client = AsyncTypeSafeClient(
-            api_key=api_key, model=model, timeout=timeout, retry=RetryPolicy(max_retries=0)
+            api_key=key,
+            base_url=resolved_base_url,
+            model=model,
+            timeout=timeout,
+            retry=RetryPolicy(max_retries=0),
         )
 
     async def aclose(self) -> None:

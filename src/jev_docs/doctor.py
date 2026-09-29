@@ -31,7 +31,7 @@ def doctor(*, smoke: bool = False) -> dict[str, Any]:
     diagnostics: dict[str, Any] = {
         "python": platform.python_version(), "platform": platform.system(), "packages": packages,
         "credentials": {name: bool(os.environ.get(name)) for name in
-                        ("TYPESAFE_API_KEY", "LLAMA_CLOUD_API_KEY", "OPENAI_API_KEY")},
+                        ("TYPESAFE_API_KEY", "OPENROUTER_API_KEY", "LLAMA_CLOUD_API_KEY", "OPENAI_API_KEY")},
         "tools": {"libreoffice": {"available": bool(office), "version": office_version},
                   "fontconfig": {"available": bool(shutil.which("fc-list"))}},
         "formats": {"pdf": bool(packages["liteparse"]), "docx": bool(office), "pptx": bool(office)},
