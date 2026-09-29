@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DocJev AI — Packet Segmentation Outcome</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f8f7f4;
+      --card: #ffffff;
+      --ink: #21182d;
+      --purple: #6718f7;
+      --lavender: #f1ebfc;
+      --line: #e2dce7;
+      --muted: #716778;
+      --green: #059669;
+      --mono: 'IBM Plex Mono', Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      padding: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .result-sheet {
+      width: 1200px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 44px 50px;
+      box-shadow: 0 12px 36px rgba(33, 24, 45, 0.06);
+      position: relative;
+    }
+
+    /* Header */
+    .hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      font: 11px var(--mono);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--purple);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -1.2px;
+      color: var(--ink);
+      line-height: 1.15;
+    }
+    .sub {
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+    .author-pill {
+      font: 12px var(--mono);
+      color: var(--muted);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      padding: 8px 18px;
+      border-radius: 20px;
+      text-align: right;
+    }
+    .author-pill strong { color: var(--ink); }
+
+    /* Results Showcase Grid */
+    .outcome-grid {
+      display: grid;
+      grid-template-columns: 240px 48px 1fr;
+      align-items: center;
+      gap: 16px;
+      margin: 28px 0 36px;
+    }
+
+    /* Input Packet Column */
+    .input-col {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 22px 18px;
+      text-align: center;
+    }
+    .col-tag {
+      font: 10px var(--mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .stack-preview {
+      position: relative;
+      width: 140px;
+      height: 180px;
+      margin: 0 auto 16px;
+    }
+    .stack-layer {
+      position: absolute;
+      width: 130px;
+      height: 170px;
+      background: white;
+      border: 1px solid #d9ccdf;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(33, 24, 45, 0.08);
+    }
+    .stack-layer:nth-child(1) { left: 0; top: 8px; transform: rotate(-5deg); background: #fdfcfa; }
+    .stack-layer:nth-child(2) { left: 6px; top: 4px; transform: rotate(3deg); background: #fbf9f6; }
+    .stack-layer:nth-child(3) {
+      left: 4px; top: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+    }
+    .stack-layer img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .input-col h3 { font-size: 14px; font-weight: 700; color: var(--ink); }
+    .input-col p { font: 11px var(--mono); color: var(--muted); margin-top: 4px; }
+
+    /* Middle Connector */
+    .connector-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .flow-arrow {
+      font-size: 28px;
+      color: var(--purple);
+      font-weight: 800;
+    }
+    .connector-col span {
+      font: 9px var(--mono);
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Output Segments Column */
+    .output-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .segment-row {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 18px;
+      align-items: center;
+    }
+    .seg-thumb {
+      width: 88px;
+      height: 112px;
+      background: white;
+      border: 1px solid #d9ccdf;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(33, 24, 45, 0.06);
+    }
+    .seg-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .seg-details {
+      display: flex;
+      flex-direction: column;
+    }
+    .seg-meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .badge {
+      font: 11px var(--mono);
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .badge-tax { background: #eee5ff; color: #5514c9; border: 1px solid #d6c5f7; }
+    .badge-fin { background: #e5edff; color: #254bd6; border: 1px solid #c9daff; }
+    .badge-press { background: #e6f7f0; color: #047857; border: 1px solid #b7ebd5; }
+    .page-range {
+      font: 12px var(--mono);
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .seg-details h4 {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .seg-details p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* Cut Indicator */
+    .cut-line-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 2px 0;
+    }
+    .cut-dashed {
+      height: 1px;
+      width: 100%;
+      background: repeating-linear-gradient(90deg, #aa8dc6, #aa8dc6 5px, transparent 5px, transparent 10px);
+    }
+    .cut-pill {
+      position: absolute;
+      background: white;
+      border: 1px solid #c9bed8;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font: 10px var(--mono);
+      font-weight: 700;
+      color: var(--purple);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Bottom KPI Stats */
+    .kpi-footer {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+    .kpi-box {
+      display: flex;
+      flex-direction: column;
+    }
+    .kpi-title {
+      font: 10px var(--mono);
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.8px;
+      font-weight: 600;
+    }
+    .kpi-val {
+      font-size: 24px;
+      font-weight: 800;
+      font-family: var(--mono);
+      color: var(--ink);
+      margin-top: 3px;
+      letter-spacing: -0.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="result-sheet">
+    
+    <!-- Header -->
+    <div class="hdr">
+      <div>
+        <div class="eyebrow">DOCJEV AI · AUTONOMOUS SEGMENTATION OUTCOME</div>
+        <h1>15-Page Multi-Document Packet Successfully Segmented</h1>
+        <p class="sub">Three distinct publications identified, partitioned, and verified with 100% page fidelity.</p>
+      </div>
+      <div class="author-pill">
+        <span>Engineered by <strong>Bharanitharan KR</strong></span><br>
+        <span style="font-size: 11px;">Jev-Docs · Open Source</span>
+      </div>
+    </div>
+
+    <!-- Main Results Grid -->
+    <div class="outcome-grid">
+
+      <!-- Left: Input Packet -->
+      <div class="input-col">
+        <span class="col-tag">01 / INPUT BUNDLE</span>
+        <div class="stack-preview">
+          <div class="stack-layer"></div>
+          <div class="stack-layer"></div>
+          <div class="stack-layer">
+            <img src="assets/tax_thumb.jpg" alt="Input Packet Scan">
+          </div>
+        </div>
+        <h3>Public Finance Packet</h3>
+        <p>15 Canonical Pages</p>
+        <p style="font-size: 10px; color: #a398ab; margin-top: 6px;">3 Bundled Publications</p>
+      </div>
+
+      <!-- Connector -->
+      <div class="connector-col">
+        <div class="flow-arrow">→</div>
+        <span>AI Pipeline</span>
+      </div>
+
+      <!-- Right: Three Extracted Segments -->
+      <div class="output-col">
+
+        <!-- Segment 1 -->
+        <div class="segment-row" style="border-left: 3px solid #6718f7;">
+          <div class="seg-thumb">
+            <img src="assets/tax_thumb.jpg" alt="IRS Form 941 Page 1">
+          </div>
+          <div class="seg-details">
+            <div class="seg-meta-bar">
+              <span class="badge badge-tax">tax_form</span>
+              <span class="page-range">PAGES 1 – 3</span>
+            </div>
+            <h4>Document #1: IRS Form 941 Quarterly Return</h4>
+            <p>Federal employment tax return. Part 1, Part 2 deposit schedule, and Form 941-V Payment Voucher continuation correctly preserved together.</p>
+          </div>
+        </div>
+
+        <!-- Cut 1 -->
+        <div class="cut-line-wrap">
+          <div class="cut-dashed"></div>
+          <div class="cut-pill">✂ BOUNDARY CUT #1 (PAGE 4)</div>
+        </div>
+
+        <!-- Segment 2 -->
+        <div class="segment-row" style="border-left: 3px solid #4b72fe;">
+          <div class="seg-thumb">
+            <img src="assets/fin_thumb.jpg" alt="Treasury Auction Results Page 4">
+          </div>
+          <div class="seg-details">
+            <div class="seg-meta-bar">
+              <span class="badge badge-fin">financial_report</span>
+              <span class="page-range">PAGES 4 – 5</span>
+            </div>
+            <h4>Document #2: Treasury Securities & Auction Results</h4>
+            <p>Two-page transaction-specific auction results (CUSIP, competitive bids, accepted rates). Split from adjacent forms.</p>
+          </div>
+        </div>
+
+        <!-- Cut 2 -->
+        <div class="cut-line-wrap">
+          <div class="cut-dashed"></div>
+          <div class="cut-pill">✂ BOUNDARY CUT #2 (PAGE 6)</div>
+        </div>
+
+        <!-- Segment 3 -->
+        <div class="segment-row" style="border-left: 3px solid #059669;">
+          <div class="seg-thumb">
+            <img src="assets/press_thumb.jpg" alt="BEA Economic GDP Release Page 6">
+          </div>
+          <div class="seg-details">
+            <div class="seg-meta-bar">
+              <span class="badge badge-press">press_release</span>
+              <span class="page-range">PAGES 6 – 15</span>
+            </div>
+            <h4>Document #3: BEA Economic GDP Report & Tables</h4>
+            <p>Full 10-page economic news release from Bureau of Economic Analysis. Narrative and 8 pages of complex statistical tables preserved intact.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom KPI Stats -->
+    <div class="kpi-footer">
+      <div class="kpi-box">
+        <span class="kpi-title">PAGE FIDELITY</span>
+        <span class="kpi-val" style="color: #059669;">15 / 15</span>
+      </div>
+      <div class="kpi-box">
+        <span class="kpi-title">TRUE BOUNDARIES</span>
+        <span class="kpi-val" style="color: #6718f7;">100% Exact</span>
+      </div>
+      <div class="kpi-box">
+        <span class="kpi-title">LITEPARSE OCR</span>
+        <span class="kpi-val">11.2 ms</span>
+      </div>
+      <div class="kpi-box">
+        <span class="kpi-title">DECISION LATENCY</span>
+        <span class="kpi-val">210 ms</span>
+      </div>
+      <div class="kpi-box">
+        <span class="kpi-title">RUN COST</span>
+        <span class="kpi-val" style="color: #059669;">$0.00 (Free)</span>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
