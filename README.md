@@ -9,7 +9,7 @@
 [![Boundary Accuracy](https://img.shields.io/badge/Boundary%20Accuracy-77.5%25%20vs%2035%25-brightgreen.svg)](benchmarks/results/real-small-v1-run01/report.md)
 [![Table Integrity](https://img.shields.io/badge/Table%20Retention-100%25-success.svg)](results_linked/02_benchmark_jev_docs_vs_chatgpt.png)
 [![Unit Economics](https://img.shields.io/badge/Cost%20per%20Doc-%240.0003-orange.svg)](results_linked/03_architecture_cost_vs_chatgpt.png)
-[![Paxi Architecture](https://img.shields.io/badge/Paxi%20Integration-Ready-purple.svg)](docs/paxi-jev-architecture-plan.md)
+
 
 </div>
 
@@ -94,15 +94,15 @@ Unlike conventional LLM chunkers that slice text blindly at token boundaries, Do
 
 ---
 
-## 🏢 Enterprise Integration Suite (Paxi / Enterprise RAG)
+## 🏢 Enterprise Integration Suite ( Enterprise RAG)
 
 DocJev provides turnkey architectural blueprints for embedding boundary-aware intelligence directly into enterprise backends (such as **PAX-I.AI**):
 
 | Document Guide | Focus Area | Key Architectural Value |
 | :--- | :--- | :--- |
-| 📘 **[How JEV Transforms Paxi](docs/how-jev-transforms-paxi.md)** | **Strategic Value & ROI** | The 5 Core Multipliers: Multi-Doc Dissection, Atomic Table Preservation, Taxonomy-Gated RAG (50% LLM cost reduction), Stable Anchor Diffs, and Structured Feed Translation. |
-| 🛠️ **[Paxi Jev Architecture Blueprint](docs/paxi-jev-architecture-plan.md)** | **System Architecture & Rollout** | Sidecar microservice deployment topology, sequence diagrams, enriched Qdrant/ES payload schemas, and 4-phase implementation plan. |
-| 🔍 **[Cross-Border AI API Guide](docs/paxi-cross-border-ai-api-guide.md)** | **Backend Internals** | Deep-dive into Paxi's NestJS API, chat context retrieval, pointer-based feed translation, and BullMQ worker synchronization. |
+| 📘 **[How JEV Transforms Enterprise](docs/how-jev-transforms-Enterprise.md)** | **Strategic Value & ROI** | The 5 Core Multipliers: Multi-Doc Dissection, Atomic Table Preservation, Taxonomy-Gated RAG (50% LLM cost reduction), Stable Anchor Diffs, and Structured Feed Translation. |
+| 🛠️ **[Enterprise Jev Architecture Blueprint](docs/Enterprise-jev-architecture-plan.md)** | **System Architecture & Rollout** | Sidecar microservice deployment topology, sequence diagrams, enriched Qdrant/ES payload schemas, and 4-phase implementation plan. |
+| 🔍 **[Cross-Border AI API Guide](docs/Enterprise-cross-border-ai-api-guide.md)** | **Backend Internals** | Deep-dive into Enterprise's NestJS API, chat context retrieval, pointer-based feed translation, and BullMQ worker synchronization. |
 
 ---
 
