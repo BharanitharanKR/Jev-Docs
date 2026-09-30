@@ -18,3 +18,5 @@ demo/exports/*.mp4
 datasets/.qa/
 datasets/real-small/qa/
 PAUSED.md
+bin/
+.github/skills/impeccable/scripts/bin/

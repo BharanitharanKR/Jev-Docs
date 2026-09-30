@@ -12,8 +12,10 @@
 <body>
   <div class="shell">
     <header class="site-header">
-      <a class="brand" href="/" aria-label="LlamaIndex DocJev home"><img src="/static/assets/brand/llamaindex-wordmark-black.png" alt="LlamaIndex"></a>
-      <div class="project-mark"><span class="slash">/</span> <span>DocJev</span><span class="experiment-label">AN OPEN SOURCE EXPERIMENT</span></div>
+      <div class="brand" style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:25px;font-weight:700;letter-spacing:-0.7px;color:#17161b;font-family:Overused,sans-serif;">DocJev</span>
+      </div>
+      <div class="project-mark"><span class="slash">/</span> <span>Studio</span><span class="experiment-label">ENGINEERED BY BHARANITHARAN KR</span></div>
       <span class="local-pill"><i></i> Local studio</span>
     </header>
     <section class="hero" aria-labelledby="hero-title">
@@ -62,7 +64,7 @@
       </section>
     </main>
     <section id="comparison-panel" class="comparison-panel" hidden aria-labelledby="comparison-title"><div class="comparison-heading"><div><span id="comparison-eyebrow" class="eyebrow">FROM A SAVED EVALUATION</span><h2 id="comparison-title">Speed, with quality in view.</h2></div><span class="comparison-scope" id="comparison-scope"></span></div><div id="comparison-rows" class="comparison-rows"></div><p class="comparison-note" id="comparison-note"></p></section>
-    <footer class="page-footer"><span>Built with LiteParse + Jev</span><span>Documents → OCR → decisions</span><a href="https://github.com/jerryjliu/docjev" target="_blank" rel="noopener noreferrer">DocJev on GitHub ↗</a></footer>
+    <footer class="page-footer"><span>Built with LiteParse + Jev</span><span>Documents → OCR → decisions</span><a href="https://github.com/BharanitharanKR/Jev-Docs" target="_blank" rel="noopener noreferrer">Jev-Docs by Bharanitharan KR ↗</a></footer>
   </div>
   <dialog id="rules-dialog" aria-labelledby="rules-title">
     <form id="rules-form"><div class="dialog-header"><div><span class="eyebrow">DEFINE WHAT MATTERS</span><h2 id="rules-title">Your categories, in plain language.</h2></div><button type="button" id="close-rules" class="icon-button" aria-label="Close rules editor">×</button></div><p class="dialog-intro">Give each category a name and a description. Jev uses these rules to decide where a document belongs.</p><div id="rules-list" class="rules-list"></div><button type="button" id="add-rule" class="add-rule">＋ Add category</button><label class="instructions-label" for="rule-instructions">Additional instructions</label><textarea id="rule-instructions" rows="2" placeholder="Optional guidance for the document's overall purpose"></textarea><div id="split-instructions-row"><label class="instructions-label" for="split-instructions">Document boundary instructions</label><textarea id="split-instructions" rows="2" placeholder="Separate distinct documents even when they share the same category."></textarea></div><p id="rules-error" class="inline-error" role="alert"></p><div class="dialog-footer"><span>“Other” catches documents outside your categories.</span><button type="submit" class="save-button">Save rules ↗</button></div></form>

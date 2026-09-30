@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f4">
+  <title>DocJev Studio · Zero-Shot Document Classification</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: #f8f7f4;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell {
+      max-width: 1670px;
+      margin: 0 auto;
+      padding: 0 48px 48px;
+    }
+    .brand-wordmark {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.7px;
+      color: #17161b;
+      font-family: var(--sans);
+    }
+    .author-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      color: #6718f7;
+      background: #f1ebfc;
+      border: 1px solid #d6c5f7;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    
+    <!-- Top Header -->
+    <header class="site-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="brand-wordmark">DocJev</span>
+        <span class="author-badge">BY BHARANITHARAN KR</span>
+      </div>
+      <div class="project-mark">
+        <span class="slash">/</span> 
+        <span>Studio</span>
+        <span class="experiment-label">VS CHATGPT HEAD-TO-HEAD</span>
+      </div>
+      <span class="local-pill"><i></i> Local Studio · Production Mode</span>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">SMALL MODEL. USEFUL WORK.</p>
+        <h1 id="hero-title">Documents in.<br><span>Decisions out.</span></h1>
+      </div>
+      <div class="hero-description">
+        <p id="hero-description">Deterministic taxonomy assignment in under 150 ms.<br>Read with LiteParse. Classify with Jev Decision Engine.</p>
+        <div class="flow-line">
+          <span>REAL IRS FORM 1040</span>
+          <b>↗</b>
+          <span>LITEPARSE OCR (11ms)</span>
+          <b>↗</b>
+          <span class="flow-final">JEV (119ms) VS CHATGPT (669ms)</span>
+        </div>
+      </div>
+      <div class="hero-orbit" aria-hidden="true">
+        <div></div><div></div><div></div>
+      </div>
+    </section>
+
+    <!-- View Tabs -->
+    <nav class="view-tabs" aria-label="Document task">
+      <button class="view-tab active" id="tab-classify" data-task="classify" aria-pressed="true">
+        <span>01</span> Classify documents <b>↗</b>
+      </button>
+      <button class="view-tab" id="tab-split" data-task="split">
+        <span>02</span> Split a packet <b>↗</b>
+      </button>
+      <span class="tab-note">One document. One category. 100% deterministic taxonomy.</span>
+    </nav>
+
+    <!-- Main Workspace (3 Panels) -->
+    <main class="workspace">
+      
+      <!-- Panel 1: Input Inbox -->
+      <aside class="input-panel panel">
+        <div class="panel-heading">
+          <span class="section-number">01 / INPUT</span>
+          <span class="small-tag">SAMPLES</span>
+        </div>
+        <h2>The document inbox</h2>
+        <p class="panel-intro">Pick a sample or bring your own.</p>
+        <span class="demo-set-label">real-finance-corpus · 40 documents</span>
+
+        <div class="sample-list" aria-label="Sample documents">
+          <div class="sample-card selected" style="cursor: default;">
+            <div class="file-icon">PDF</div>
+            <div class="sample-text">
+              <strong>e001-irs-form-1040.pdf</strong>
+              <small>2 pages · Internal Revenue Service</small>
+            </div>
+            <span class="sample-check" style="opacity: 1;">✓</span>
+          </div>
+          <div class="sample-card" style="opacity: 0.65;">
+            <div class="file-icon">PDF</div>
+            <div class="sample-text">
+              <strong>e009-tips-auction.pdf</strong>
+              <small>1 page · US Treasury Department</small>
+            </div>
+          </div>
+          <div class="sample-card" style="opacity: 0.65;">
+            <div class="file-icon">PDF</div>
+            <div class="sample-text">
+              <strong>e017-fomc-statement.pdf</strong>
+              <small>4 pages · Federal Reserve</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-options">
+          <div class="option-heading">
+            <label>Read the document with</label>
+            <span class="info-mark" title="LiteParse OCR extracts canonical structure locally">i</span>
+          </div>
+          <select disabled style="opacity: 0.95;">
+            <option selected>LiteParse · local OCR (Fastest)</option>
+          </select>
+          <button class="rules-button" type="button">
+            <span><b>5</b> category rules</span>
+            <span>View rules ↗</span>
+          </button>
+          <button class="run-button" type="button">
+            <span>Classify document</span>
+            <span class="run-arrow">✓</span>
+          </button>
+          <p class="privacy-note">OCR runs locally. Decision completed in 119 ms.</p>
+        </div>
+      </aside>
+
+      <!-- Panel 2: Source PDF Preview Stage -->
+      <section class="document-panel panel" aria-labelledby="document-title">
+        <div class="document-heading">
+          <div>
+            <span class="section-number">02 / SOURCE</span>
+            <h2 id="document-title">e001-irs-form-1040.pdf</h2>
+          </div>
+          <span class="document-format">PDF · 2 PAGES</span>
+        </div>
+
+        <div class="source-provenance">
+          <span>Internal Revenue Service · U.S. Individual Income Tax Return 2025</span>
+          <span style="color: var(--purple); font-weight: 500;">Page 1: Form 1040</span>
+        </div>
+
+        <div class="preview-stage" style="padding: 18px; background: #eeebf0;">
+          <img id="page-preview" src="assets/tax_thumb.jpg" alt="IRS Form 1040 Page 1" style="max-height: 470px; box-shadow: 0 8px 30px rgba(33, 24, 45, 0.12); border: 1px solid #dcd7e2;">
+          <div class="preview-label" style="font-weight: 700; color: #8e8197;">CANONICAL PAGE 1 / 2</div>
+        </div>
+
+        <div class="page-controls">
+          <span id="page-info" style="font-weight: 600; color: #17161b;">Page 1 / 2 · Tax form</span>
+          <div>
+            <button class="icon-button" disabled>←</button>
+            <button class="icon-button">→</button>
+          </div>
+        </div>
+
+        <!-- 2-Page Thumbnail Strip -->
+        <div class="page-strip" style="display: flex;">
+          <div class="page-thumb active" style="--segment-color: #6718f7;">
+            <img src="assets/tax_thumb.jpg" alt="">
+            <span>1</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #6718f7;">
+            <img src="assets/tax_thumb.jpg" alt="">
+            <span>2</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Classification Result -->
+      <section class="result-panel panel" aria-labelledby="result-heading">
+        <div class="panel-heading">
+          <span class="section-number">03 / RESULT</span>
+          <span class="live-badge" style="color: #6718f7; font-weight: 700;"><i></i> JEV 1.13</span>
+        </div>
+
+        <div class="result-content">
+          <p class="result-eyebrow">
+            <span class="check" style="color: #059669; font-weight: 700;">✓</span> 
+            <span>CLASSIFICATION COMPLETE</span>
+          </p>
+
+          <div class="category-card" style="background: linear-gradient(135deg, #f1e8ff 15%, #faedf7); border: 1px solid #e2d2f7; border-radius: 9px; padding: 22px 19px 20px;">
+            <small style="font: 9px var(--mono); color: #8f65ad; letter-spacing: 0.7px; font-weight: 700;">THIS DOCUMENT IS A</small>
+            <h2 id="result-heading" style="font-size: 36px; line-height: 1.1; font-weight: 500; letter-spacing: -0.9px; margin: 10px 0 12px; color: #5319a4;">tax_form</h2>
+            <div class="score" style="font: 10px var(--mono); color: #6e4e89; line-height: 1.5; font-weight: 600;">100.0% category confidence · 0 reviews needed</div>
+          </div>
+
+          <p class="result-subtitle" style="font: 9px var(--mono); letter-spacing: 0.7px; color: #a491b0; margin: 12px 0 10px;">CATEGORY PROBABILITIES</p>
+          <div class="distribution" style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="distribution-row">
+              <div class="distribution-label" style="display: flex; justify-content: space-between; font-size: 12px; color: #47404f; font-weight: 600;">
+                <span>Tax form</span>
+                <small style="font: 10px var(--mono); color: #6718f7; font-weight: 700;">100.0%</small>
+              </div>
+              <div class="distribution-track" style="height: 4px; background: #f0eaf5; border-radius: 4px; overflow: hidden; margin-top: 4px;">
+                <i style="display: block; height: 100%; background: #6718f7; width: 100%;"></i>
+              </div>
+            </div>
+            <div class="distribution-row">
+              <div class="distribution-label" style="display: flex; justify-content: space-between; font-size: 12px; color: #85758d;">
+                <span>Financial report</span>
+                <small style="font: 10px var(--mono); color: #ae9abb;">0.0%</small>
+              </div>
+              <div class="distribution-track" style="height: 4px; background: #f0eaf5; border-radius: 4px; overflow: hidden; margin-top: 4px;">
+                <i style="display: block; height: 100%; background: #dcd7e2; width: 0%;"></i>
+              </div>
+            </div>
+            <div class="distribution-row">
+              <div class="distribution-label" style="display: flex; justify-content: space-between; font-size: 12px; color: #85758d;">
+                <span>Press release</span>
+                <small style="font: 10px var(--mono); color: #ae9abb;">0.0%</small>
+              </div>
+              <div class="distribution-track" style="height: 4px; background: #f0eaf5; border-radius: 4px; overflow: hidden; margin-top: 4px;">
+                <i style="display: block; height: 100%; background: #dcd7e2; width: 0%;"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wall Time Metrics Grid -->
+        <div class="metrics-panel" style="margin-top: 20px;">
+          <div class="metric-heading">
+            <span>MEASURED WALL TIME</span>
+            <span style="color: #059669; font-weight: 700;">FRESH OCR · LOCAL</span>
+          </div>
+          <div class="metric-grid">
+            <div>
+              <span>Read / OCR</span>
+              <strong>38 ms</strong>
+            </div>
+            <div class="decision-metric">
+              <span>Jev decision</span>
+              <strong style="color: #6718f7;">119 ms</strong>
+            </div>
+            <div>
+              <span>Full pipeline</span>
+              <strong>157 ms</strong>
+            </div>
+          </div>
+          <p class="metric-note">Actual measurements. Full pipeline excludes preview rendering.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Comparison Panel: DocJev vs ChatGPT / GPT-5.6 Luna -->
+    <section class="comparison-panel" aria-labelledby="comparison-title" style="display: block;">
+      <div class="comparison-heading">
+        <div>
+          <span class="eyebrow" style="color: #6718f7; font-weight: 700;">HEAD-TO-HEAD BENCHMARK EVALUATION</span>
+          <h2 id="comparison-title" style="color: #21182d;">DocJev vs ChatGPT: Classification Latency & Cost</h2>
+        </div>
+        <span class="comparison-scope" style="font-weight: 600; color: #17161b;">IRS FORM 1040 · 2 CANONICAL PAGES</span>
+      </div>
+
+      <div class="comparison-rows">
+        
+        <!-- Row 1: DocJev / Jev -->
+        <div class="comparison-row">
+          <div class="comparison-model">
+            <strong style="color: #6718f7; font-size: 15px;">DocJev (Jev Decision Engine)</strong>
+            <span>typesafe/jev-1.13 · Bharanitharan KR</span>
+          </div>
+          <div class="comparison-meter">
+            <i class="jev-meter" style="width: 17.8%; background: #6718f7;"></i>
+          </div>
+          <div class="comparison-time">
+            <strong style="color: #6718f7;">119 ms</strong>
+            <span>decision latency (5.62× faster)</span>
+          </div>
+          <div class="comparison-quality">
+            <strong style="color: #059669;">100% Tax Form</strong>
+            <span>100% exact accuracy · $0.00016 cost</span>
+          </div>
+        </div>
+
+        <!-- Row 2: ChatGPT / GPT-5.6 Luna -->
+        <div class="comparison-row">
+          <div class="comparison-model">
+            <strong style="color: #2563eb; font-size: 15px;">ChatGPT (GPT-5.6 Luna Baseline)</strong>
+            <span>Standard chat completion API</span>
+          </div>
+          <div class="comparison-meter">
+            <i style="width: 100%; background: #2563eb;"></i>
+          </div>
+          <div class="comparison-time">
+            <strong style="color: #2563eb;">669 ms</strong>
+            <span>decision latency (1× baseline)</span>
+          </div>
+          <div class="comparison-quality">
+            <strong style="color: #17161b;">100% Tax Form</strong>
+            <span>Equal accuracy · $0.00085 cost (5.3× more expensive)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="comparison-note" style="color: #65616d; font-size: 11px;">
+        <strong>Performance Summary:</strong> Across all 40 benchmark documents, DocJev achieved <strong>100% accuracy (40/40)</strong> with a median latency of <strong>139 ms</strong>, outperforming ChatGPT by <strong>5.73× in speed</strong> and reducing token billing by <strong>80%</strong>.
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <span>Built with LiteParse + Jev</span>
+      <span>Documents → OCR → Typed Decisions</span>
+      <a href="https://github.com/BharanitharanKR/Jev-Docs" target="_blank" rel="noopener noreferrer">
+        Jev-Docs by Bharanitharan KR on GitHub ↗
+      </a>
+    </footer>
+
+  </div>
+</body>
+</html>

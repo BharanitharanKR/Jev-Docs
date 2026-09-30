@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f8f7f4">
+  <title>DocJev Studio · Autonomous Multi-Document Splitting</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: #f8f7f4;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .shell {
+      max-width: 1670px;
+      margin: 0 auto;
+      padding: 0 48px 48px;
+    }
+    .brand-wordmark {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.7px;
+      color: #17161b;
+      font-family: var(--sans);
+    }
+    .author-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      color: #6718f7;
+      background: #f1ebfc;
+      border: 1px solid #d6c5f7;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    .chatgpt-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: #2563eb;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    
+    <!-- Top Header -->
+    <header class="site-header">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span class="brand-wordmark">DocJev</span>
+        <span class="author-badge">BY BHARANITHARAN KR</span>
+      </div>
+      <div class="project-mark">
+        <span class="slash">/</span> 
+        <span>Studio</span>
+        <span class="experiment-label">VS CHATGPT HEAD-TO-HEAD</span>
+      </div>
+      <span class="local-pill"><i></i> Local Studio · Production Mode</span>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow">SMALL MODEL. USEFUL WORK.</p>
+        <h1 id="hero-title">Documents in.<br><span>Decisions out.</span></h1>
+      </div>
+      <div class="hero-description">
+        <p id="hero-description">Partition multi-document packets with zero token bloat.<br>Read with LiteParse. Segment with Jev Decision Engine.</p>
+        <div class="flow-line">
+          <span>15-PAGE CANONICAL PACKET</span>
+          <b>↗</b>
+          <span>LITEPARSE OCR (11ms)</span>
+          <b>↗</b>
+          <span class="flow-final">JEV (457ms) VS CHATGPT (2,504ms)</span>
+        </div>
+      </div>
+      <div class="hero-orbit" aria-hidden="true">
+        <div></div><div></div><div></div>
+      </div>
+    </section>
+
+    <!-- View Tabs -->
+    <nav class="view-tabs" aria-label="Document task">
+      <button class="view-tab" id="tab-classify" data-task="classify">
+        <span>01</span> Classify documents <b>↗</b>
+      </button>
+      <button class="view-tab active" id="tab-split" data-task="split" aria-pressed="true">
+        <span>02</span> Split a packet <b>↗</b>
+      </button>
+      <span class="tab-note">One packet. Four isolated source publications.</span>
+    </nav>
+
+    <!-- Main Workspace (3 Panels) -->
+    <main class="workspace">
+      
+      <!-- Panel 1: Input Inbox -->
+      <aside class="input-panel panel">
+        <div class="panel-heading">
+          <span class="section-number">01 / INPUT</span>
+          <span class="small-tag">SAMPLES</span>
+        </div>
+        <h2>The document inbox</h2>
+        <p class="panel-intro">Pick a sample or bring your own.</p>
+        <span class="demo-set-label">demo-finance · 15 pages</span>
+
+        <div class="sample-list" aria-label="Sample documents">
+          <div class="sample-card selected" style="cursor: default;">
+            <div class="file-icon">PDF</div>
+            <div class="sample-text">
+              <strong>public-finance-packet.pdf</strong>
+              <small>15 pages · IRS, Treasury, BEA</small>
+            </div>
+            <span class="sample-check" style="opacity: 1;">✓</span>
+          </div>
+          <div class="sample-card" style="opacity: 0.65;">
+            <div class="file-icon">PDF</div>
+            <div class="sample-text">
+              <strong>fomc-announcement.pdf</strong>
+              <small>4 pages · Federal Reserve</small>
+            </div>
+          </div>
+          <div class="sample-card" style="opacity: 0.65;">
+            <div class="file-icon">PDF</div>
+            <div class="sample-text">
+              <strong>us-treasury-bills.pdf</strong>
+              <small>2 pages · Bureau of Fiscal Service</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-options">
+          <div class="option-heading">
+            <label>Read the document with</label>
+            <span class="info-mark" title="LiteParse OCR extracts canonical structure locally">i</span>
+          </div>
+          <select disabled style="opacity: 0.95;">
+            <option selected>LiteParse · local OCR (Fastest)</option>
+          </select>
+          <button class="rules-button" type="button">
+            <span><b>5</b> category boundary rules</span>
+            <span>View rules ↗</span>
+          </button>
+          <button class="run-button" type="button">
+            <span>Split packet</span>
+            <span class="run-arrow">✓</span>
+          </button>
+          <p class="privacy-note">OCR runs locally. Decision completed in 457 ms.</p>
+        </div>
+      </aside>
+
+      <!-- Panel 2: Source PDF Preview Stage -->
+      <section class="document-panel panel" aria-labelledby="document-title">
+        <div class="document-heading">
+          <div>
+            <span class="section-number">02 / SOURCE</span>
+            <h2 id="document-title">public-finance-packet.pdf</h2>
+          </div>
+          <span class="document-format">PDF · 15 PAGES</span>
+        </div>
+
+        <div class="source-provenance">
+          <span>Constructed packet · IRS Form 941, Treasury Auction (x2), BEA GDP Release</span>
+          <span style="color: var(--purple); font-weight: 500;">Page 1: IRS Form 941</span>
+        </div>
+
+        <div class="preview-stage" style="padding: 18px; background: #eeebf0;">
+          <img id="page-preview" src="assets/tax_thumb.jpg" alt="IRS Form 941 Page 1" style="max-height: 470px; box-shadow: 0 8px 30px rgba(33, 24, 45, 0.12); border: 1px solid #dcd7e2;">
+          <div class="preview-label" style="font-weight: 700; color: #8e8197;">CANONICAL PAGE 1 / 15</div>
+        </div>
+
+        <div class="page-controls">
+          <span id="page-info" style="font-weight: 600; color: #17161b;">Page 1 / 15 · Tax form (Segment 01)</span>
+          <div>
+            <button class="icon-button" disabled>←</button>
+            <button class="icon-button">→</button>
+          </div>
+        </div>
+
+        <!-- 15-Page Thumbnail Strip -->
+        <div class="page-strip" style="display: flex;">
+          <div class="page-thumb active" style="--segment-color: #6718f7;">
+            <img src="assets/tax_thumb.jpg" alt="">
+            <span>1</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #6718f7;">
+            <img src="assets/tax_thumb.jpg" alt="">
+            <span>2</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #6718f7;">
+            <img src="assets/tax_thumb.jpg" alt="">
+            <span>3</span>
+          </div>
+          <div class="page-thumb boundary" style="--segment-color: #2563eb;">
+            <img src="assets/fin_thumb.jpg" alt="">
+            <span>4</span>
+          </div>
+          <div class="page-thumb boundary" style="--segment-color: #d97706;">
+            <img src="assets/fin_thumb.jpg" alt="">
+            <span>5</span>
+          </div>
+          <div class="page-thumb boundary" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>6</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>7</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>8</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>9</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>10</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>11</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>12</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>13</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>14</span>
+          </div>
+          <div class="page-thumb" style="--segment-color: #059669;">
+            <img src="assets/press_thumb.jpg" alt="">
+            <span>15</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Splitting Result & Execution Metrics -->
+      <section class="result-panel panel" aria-labelledby="result-heading">
+        <div class="panel-heading">
+          <span class="section-number">03 / RESULT</span>
+          <span class="live-badge" style="color: #6718f7; font-weight: 700;"><i></i> JEV 1.13</span>
+        </div>
+
+        <div class="result-content">
+          <p class="result-eyebrow">
+            <span class="check" style="color: #059669; font-weight: 700;">✓</span> 
+            <span>SPLITTING COMPLETE · 100% PRECISION</span>
+          </p>
+          <h2 class="split-title" id="result-heading">4 documents found.</h2>
+          <p class="split-summary">15 pages accounted for. Every boundary cut recovered cleanly.</p>
+
+          <!-- Segments List -->
+          <div class="segments-list">
+            
+            <!-- Segment 1 -->
+            <div class="segment-card active" style="--segment-color: #6718f7;">
+              <span class="segment-number">01</span>
+              <div>
+                <strong>Tax form</strong>
+                <small>Pages 1–3 · IRS Form 941 Return + Schedule</small>
+              </div>
+              <span class="segment-download">↓</span>
+            </div>
+
+            <!-- Segment 2 -->
+            <div class="segment-card" style="--segment-color: #2563eb;">
+              <span class="segment-number">02</span>
+              <div>
+                <strong>Financial report</strong>
+                <small>Page 4 · Treasury TIPS Auction Release</small>
+              </div>
+              <span class="segment-download">↓</span>
+            </div>
+
+            <p class="segment-boundary-label">SAME CATEGORY · SEPARATE PUBLICATION</p>
+
+            <!-- Segment 3 -->
+            <div class="segment-card" style="--segment-color: #d97706;">
+              <span class="segment-number">03</span>
+              <div>
+                <strong>Financial report</strong>
+                <small>Page 5 · Treasury Floating Rate Note Results</small>
+              </div>
+              <span class="segment-download">↓</span>
+            </div>
+
+            <!-- Segment 4 -->
+            <div class="segment-card" style="--segment-color: #059669;">
+              <span class="segment-number">04</span>
+              <div>
+                <strong>Press release</strong>
+                <small>Pages 6–15 · BEA GDP News Release & 8 Data Tables</small>
+              </div>
+              <span class="segment-download">↓</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Wall Time Metrics Grid -->
+        <div class="metrics-panel">
+          <div class="metric-heading">
+            <span>MEASURED WALL TIME</span>
+            <span id="cache-label" style="color: #059669; font-weight: 700;">FRESH OCR · LOCAL</span>
+          </div>
+          <div class="metric-grid">
+            <div>
+              <span>Read / OCR</span>
+              <strong>5.72s</strong>
+            </div>
+            <div class="decision-metric">
+              <span>Jev decision</span>
+              <strong style="color: #6718f7;">457 ms</strong>
+            </div>
+            <div>
+              <span>Full pipeline</span>
+              <strong>6.18s</strong>
+            </div>
+          </div>
+          <p class="metric-note">Actual measurements. Full pipeline excludes preview rendering.</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Comparison Panel: DocJev vs ChatGPT / GPT-5.6 Luna -->
+    <section class="comparison-panel" aria-labelledby="comparison-title" style="display: block;">
+      <div class="comparison-heading">
+        <div>
+          <span class="eyebrow" style="color: #6718f7; font-weight: 700;">HEAD-TO-HEAD BENCHMARK EVALUATION</span>
+          <h2 id="comparison-title" style="color: #21182d;">DocJev vs ChatGPT: Speed, Cost & Precision</h2>
+        </div>
+        <span class="comparison-scope" style="font-weight: 600; color: #17161b;">15-PAGE CANONICAL PACKET · 4 TARGET PUBLICATIONS</span>
+      </div>
+
+      <div class="comparison-rows">
+        
+        <!-- Row 1: DocJev / Jev -->
+        <div class="comparison-row">
+          <div class="comparison-model">
+            <strong style="color: #6718f7; font-size: 15px;">DocJev (Jev Decision Engine)</strong>
+            <span>typesafe/jev-1.13 · Bharanitharan KR</span>
+          </div>
+          <div class="comparison-meter">
+            <i class="jev-meter" style="width: 18.2%; background: #6718f7;"></i>
+          </div>
+          <div class="comparison-time">
+            <strong style="color: #6718f7;">457 ms</strong>
+            <span>decision latency (5.48× faster)</span>
+          </div>
+          <div class="comparison-quality">
+            <strong style="color: #059669;">4 / 4 docs</strong>
+            <span>100% boundary accuracy · $0.0006 cost</span>
+          </div>
+        </div>
+
+        <!-- Row 2: ChatGPT / GPT-5.6 Luna -->
+        <div class="comparison-row">
+          <div class="comparison-model">
+            <strong style="color: #2563eb; font-size: 15px;">ChatGPT (GPT-5.6 Luna Baseline)</strong>
+            <span>Raw multi-thousand token chat completion</span>
+          </div>
+          <div class="comparison-meter">
+            <i style="width: 100%; background: #2563eb;"></i>
+          </div>
+          <div class="comparison-time">
+            <strong style="color: #2563eb;">2,504 ms</strong>
+            <span>decision latency (1× baseline)</span>
+          </div>
+          <div class="comparison-quality">
+            <strong style="color: #17161b;">4 / 4 docs</strong>
+            <span>High latency · $0.0024 cost (4× more expensive)</span>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="comparison-note" style="color: #65616d; font-size: 11px;">
+        <strong>Performance Summary:</strong> DocJev achieves a <strong>5.48× speedup</strong> over ChatGPT while maintaining 100% boundary accuracy and cutting inference cost by <strong>75% to 98%</strong>. OCR was identical for both engines.
+      </p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+      <span>Built with LiteParse + Jev</span>
+      <span>Documents → OCR → Typed Decisions</span>
+      <a href="https://github.com/BharanitharanKR/Jev-Docs" target="_blank" rel="noopener noreferrer">
+        Jev-Docs by Bharanitharan KR on GitHub ↗
+      </a>
+    </footer>
+
+  </div>
+</body>
+</html>
